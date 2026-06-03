@@ -1,0 +1,40 @@
+name: Update nixpkgs pin
+
+on:
+  schedule:
+    # Weekly on Monday at 06:00 UTC.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-nixpkgs-pin
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: NixOS/nix-installer-action@v1
+
+      - name: Update nixpkgs lock
+        run: nix flake update nixpkgs
+
+      - name: Commit updated lock file
+        run: |
+          if git diff --quiet -- flake.lock; then
+            echo "flake.lock is already up to date"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flake.lock
+          git commit -m "chore: update nixpkgs weekly pin"
+          git push
