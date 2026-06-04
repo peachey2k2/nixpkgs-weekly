@@ -7,3 +7,15 @@ We pin a `nixpkgs-unstable` revision and edit it via a Github action.
 ```nix
 inputs.nixpkgs.url = "github:peachey2k2/nixpkgs-weekly";
 ```
+
+You can also import it like regular nixpkgs and pass configuration:
+
+```nix
+let
+  pkgs = import inputs.nixpkgs {
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+  };
+in
+# ...
+```

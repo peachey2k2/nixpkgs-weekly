@@ -6,4 +6,5 @@
 !README.md
 !flake.nix
 !flake.lock
+!default.nix
 !LICENSE.md
