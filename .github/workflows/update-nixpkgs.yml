@@ -21,7 +21,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: NixOS/nix-installer-action@v1
+        uses: NixOS/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
 
       - name: Update nixpkgs lock
         run: nix flake update nixpkgs
